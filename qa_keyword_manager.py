@@ -15,6 +15,7 @@ class QAKeywordManager:
     
     def add_to_queue(self,question_array, index_info):
         self.queue.append( (question_array, index_info) )
+        folder_id_path = index_info[0]
         if folder_id_path not in self.is_writing.keys():
             self.is_writing[folder_id_path]=threading.Lock()
 
@@ -35,7 +36,7 @@ class QAKeywordManager:
         # end_url = server_url +"/api/train-bot-status"
         # response = {"status": 'Ok'}
         # request.post(end_url, data=json.dumps(response))
-        
+
         self.is_writing[folder_id_path].release()
 
     def transform_question_array(self, question_array):
