@@ -23,7 +23,7 @@ class QAKeywordManager:
     
     def add_questions(self):
         question_array, index_info = self.queue.popleft()
-        folder_id_path = index_info[0]
+        folder_id_path, project_id, version_id, version_number = index_info
         self.is_writing[folder_id_path].acquire()
         if self.index.getIndexDir() != folder_id_path:
             self.index.update_store_dir(folder_id_path) 
@@ -33,8 +33,13 @@ class QAKeywordManager:
 
         self.search_engine.update(self.index.getIndexDir())
 
+        # TODO: setup from config
         end_url = "https://feature-train-bot-interakt-backend-labs-dev.apps.who.lxp.academy.who.int"
-        response = {"status": 'Ok'}
+        response = {
+                "project_id": project_id,
+                "version_id": version_id,
+                "status": 'ok'
+            }
         request.post(end_url, data=json.dumps(response))
 
         self.is_writing[folder_id_path].release()
