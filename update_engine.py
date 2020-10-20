@@ -23,7 +23,7 @@ class UpdateEngine:
     
     def add_questions(self, question_array, data_hash_id):
         unique_folder_id = "./data/"+data_hash_id
-        self.qa_keyword_manager.add_questions(question_array, unique_folder_id)
+        self.qa_keyword_manager.add_to_queue(question_array, unique_folder_id)
 
     def remove_questions(self, question_array):
         self.qa_keyword_manager.remove_questions(json_array)
