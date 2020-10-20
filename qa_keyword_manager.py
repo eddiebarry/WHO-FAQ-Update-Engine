@@ -33,9 +33,9 @@ class QAKeywordManager:
 
         self.search_engine.update(self.index.getIndexDir())
 
-        # end_url = server_url +"/api/train-bot-status"
-        # response = {"status": 'Ok'}
-        # request.post(end_url, data=json.dumps(response))
+        end_url = "https://feature-train-bot-interakt-backend-labs-dev.apps.who.lxp.academy.who.int"
+        response = {"status": 'Ok'}
+        request.post(end_url, data=json.dumps(response))
 
         self.is_writing[folder_id_path].release()
 
