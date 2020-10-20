@@ -12,33 +12,30 @@ class QAKeywordManager:
         self.queue = deque()
         self.is_writing = {}
         self.pool = ThreadPoolExecutor(max_workers=4)
-        # threading.Lock()
     
-    def add_to_queue(self,question_array, folder_id_path):
-        self.queue.append( (question_array, folder_id_path) )
+    def add_to_queue(self,question_array, index_info):
+        self.queue.append( (question_array, index_info) )
         if folder_id_path not in self.is_writing.keys():
             self.is_writing[folder_id_path]=threading.Lock()
-        # if not self.is_writing:
-        #     self.is_writing = True
+
         self.pool.submit(self.add_questions)
-        # thread = Thread(\
-        #         target=self.add_questions
-        #     )
-        # thread.start()
     
     def add_questions(self):
-        question_array, folder_id_path = self.queue.popleft()
+        question_array, index_info = self.queue.popleft()
+        folder_id_path = index_info[0]
         self.is_writing[folder_id_path].acquire()
         if self.index.getIndexDir() != folder_id_path:
             self.index.update_store_dir(folder_id_path) 
 
         question_array = self.transform_question_array(question_array)
-        # store the jsons
         self.index.indexJsonArray(question_array)
-        # self.index.print_all_contents()
 
-        # update the search engine to use the new data
         self.search_engine.update(self.index.getIndexDir())
+
+        # end_url = server_url +"/api/train-bot-status"
+        # response = {"status": 'Ok'}
+        # request.post(end_url, data=json.dumps(response))
+        
         self.is_writing[folder_id_path].release()
 
     def transform_question_array(self, question_array):

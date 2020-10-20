@@ -21,9 +21,11 @@ class UpdateEngine:
         self.qa_keyword_manager = qa_keyword_manager
         self.category_question_manager = category_question_manager
     
-    def add_questions(self, question_array, data_hash_id):
+    def add_questions(self, question_array, project_info):
+        data_hash_id, project_id, version_id, version_number = project_info
         unique_folder_id = "./data/"+data_hash_id
-        self.qa_keyword_manager.add_to_queue(question_array, unique_folder_id)
+        index_info = [unique_folder_id, project_id, version_id, version_number]
+        self.qa_keyword_manager.add_to_queue(question_array, index_info)
 
     def remove_questions(self, question_array):
         self.qa_keyword_manager.remove_questions(json_array)
