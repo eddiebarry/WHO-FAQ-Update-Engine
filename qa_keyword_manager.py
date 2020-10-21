@@ -36,7 +36,7 @@ class QAKeywordManager:
         self.search_engine.update(self.index.getIndexDir())
 
         # TODO: setup from config
-        end_url = "https://feature-train-bot-interakt-backend-labs-dev.apps.who.lxp.academy.who.int/api/train-bot-status"
+        end_url = "https://interakt-backend-labs-staging.apps.who.lxp.academy.who.int/api/train-bot-status"
 
         response = {
                 "project_id": int(project_id),
