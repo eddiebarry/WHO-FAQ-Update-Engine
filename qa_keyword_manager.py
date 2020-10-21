@@ -1,3 +1,5 @@
+import json
+import requests
 from collections import deque
 from threading import Thread
 from multiprocessing import Pool
@@ -35,12 +37,16 @@ class QAKeywordManager:
 
         # TODO: setup from config
         end_url = "https://feature-train-bot-interakt-backend-labs-dev.apps.who.lxp.academy.who.int/api/train-bot-status"
+
         response = {
-                "project_id": project_id,
-                "version_id": version_id,
+                "project_id": int(project_id),
+                "version_id": int(version_id),
                 "status": 'ok'
             }
-        request.post(end_url, data=json.dumps(response))
+        
+        print("post request sending to ", end_url)
+        r = requests.post(end_url, json=response)
+        print(r.json())
 
         self.is_writing[folder_id_path].release()
 
