@@ -41,6 +41,7 @@ class QAKeywordManager:
         response = {
                 "project_id": int(project_id),
                 "version_id": int(version_id),
+                "version_number": version_number,
                 "status": 'ok'
             }
         
