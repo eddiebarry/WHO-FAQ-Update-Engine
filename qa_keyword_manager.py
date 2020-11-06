@@ -8,16 +8,18 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 class QAKeywordManager:
-    def __init__(self, search_engine, index):
+    def __init__(self, search_engine):
         self.search_engine = search_engine
-        self.index = index
+        # self.index = index
         self.queue = deque()
         self.is_writing = {}
         self.pool = ThreadPoolExecutor(max_workers=4)
+        self.latest_project_id = 0
+        self.latest_version_id = 0
     
     def add_to_queue(self,question_array, index_info):
         self.queue.append( (question_array, index_info) )
-        folder_id_path = index_info[0]
+        folder_id_path, self.latest_project_id, self.latest_version_id, _ = index_info
         if folder_id_path not in self.is_writing.keys():
             self.is_writing[folder_id_path]=threading.Lock()
 
@@ -27,13 +29,10 @@ class QAKeywordManager:
         question_array, index_info = self.queue.popleft()
         folder_id_path, project_id, version_id, version_number = index_info
         self.is_writing[folder_id_path].acquire()
-        if self.index.getIndexDir() != folder_id_path:
-            self.index.update_store_dir(folder_id_path) 
-
         question_array = self.transform_question_array(question_array)
-        self.index.indexJsonArray(question_array)
 
-        self.search_engine.update(self.index.getIndexDir())
+        self.search_engine.index(project_id=project_id, version_id=version_id,\
+            question_list= question_array)
 
         # TODO: setup from config
         end_url = "https://interakt-backend-labs-staging.apps.who.lxp.academy.who.int/api/train-bot-status"
