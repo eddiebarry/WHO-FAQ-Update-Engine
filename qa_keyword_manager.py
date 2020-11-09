@@ -19,20 +19,35 @@ class QAKeywordManager:
     
     def add_to_queue(self,question_array, index_info):
         self.queue.append( (question_array, index_info) )
-        folder_id_path, self.latest_project_id, self.latest_version_id, _ = index_info
-        if folder_id_path not in self.is_writing.keys():
-            self.is_writing[folder_id_path]=threading.Lock()
+        folder_id_path, self.latest_project_id, self.latest_version_id, temp0, temp1 = index_info
+        
+        new_path = str(self.latest_project_id)
+        if new_path not in self.is_writing.keys():
+            self.is_writing[new_path]=threading.Lock()
+
+        print("inside qa keyword manager")
 
         self.pool.submit(self.add_questions)
     
     def add_questions(self):
         question_array, index_info = self.queue.popleft()
-        folder_id_path, project_id, version_id, version_number = index_info
-        self.is_writing[folder_id_path].acquire()
+        folder_id_path, project_id, version_id, \
+            version_number, previous_versions = index_info
+
+        new_path = str(project_id)
+        self.is_writing[new_path].acquire()
         question_array = self.transform_question_array(question_array)
 
+        print("inside add questions")
+
+        print(previous_versions)
+        self.search_engine.index_prev_versions(project_id=project_id,\
+            version_id=version_id, previous_versions=previous_versions)
+        
+        print("previous questions added")
         self.search_engine.index(project_id=project_id, version_id=version_id,\
             question_list= question_array)
+        print("new questions added")
 
         # TODO: setup from config
         end_url = "https://interakt-backend-labs-staging.apps.who.lxp.academy.who.int/api/train-bot-status"
@@ -44,11 +59,12 @@ class QAKeywordManager:
                 "status": 'ok'
             }
         
+        print(response)
         print("post request sending to ", end_url)
         r = requests.post(end_url, json=response)
         print(r.json())
 
-        self.is_writing[folder_id_path].release()
+        self.is_writing[new_path].release()
 
     def transform_question_array(self, question_array):
         for qa_pair in question_array:

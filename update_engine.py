@@ -22,9 +22,12 @@ class UpdateEngine:
         self.category_question_manager = category_question_manager
     
     def add_questions(self, question_array, project_info):
-        data_hash_id, project_id, version_id, version_number = project_info
+        data_hash_id, project_id, version_id, \
+            version_number, previous_versions = project_info
         unique_folder_id = "./data/"+data_hash_id
-        index_info = [unique_folder_id, project_id, version_id, version_number]
+        index_info = [unique_folder_id, project_id, \
+            version_id, version_number, previous_versions]
+        print("inside update engine")
         self.qa_keyword_manager.add_to_queue(question_array, index_info)
 
     def remove_questions(self, question_array):
