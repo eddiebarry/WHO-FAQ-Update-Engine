@@ -39,8 +39,8 @@ class QAKeywordManager:
         question_array = self.transform_question_array(question_array)
 
         print("inside add questions")
-
         print(previous_versions)
+        print(project_id,version_id)
         if (len(previous_versions)>0):
             self.search_engine.index_prev_versions(project_id=project_id,\
                 version_id=version_id, previous_versions=previous_versions)
