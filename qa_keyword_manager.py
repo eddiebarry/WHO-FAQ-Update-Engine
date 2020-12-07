@@ -26,8 +26,8 @@ class QAKeywordManager:
             self.is_writing[new_path]=threading.Lock()
 
         print("inside qa keyword manager")
-        self.add_questions()
-        # self.pool.submit(self.add_questions)
+
+        self.pool.submit(self.add_questions)
     
     def add_questions(self):
         question_array, index_info = self.queue.popleft()
@@ -40,10 +40,9 @@ class QAKeywordManager:
 
         print("inside add questions")
         print(previous_versions)
-        print(project_id,version_id)
-        if (len(previous_versions)>0):
-            self.search_engine.index_prev_versions(project_id=project_id,\
-                version_id=version_id, previous_versions=previous_versions)
+        
+        self.search_engine.index_prev_versions(project_id=project_id,\
+            version_id=version_id, previous_versions=previous_versions)
         
         print("previous questions added")
         self.search_engine.index(project_id=project_id, version_id=version_id,\
