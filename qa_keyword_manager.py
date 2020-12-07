@@ -26,8 +26,8 @@ class QAKeywordManager:
             self.is_writing[new_path]=threading.Lock()
 
         print("inside qa keyword manager")
-
-        self.pool.submit(self.add_questions)
+        self.add_questions()
+        # self.pool.submit(self.add_questions)
     
     def add_questions(self):
         question_array, index_info = self.queue.popleft()
