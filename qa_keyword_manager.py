@@ -41,8 +41,9 @@ class QAKeywordManager:
         print("inside add questions")
 
         print(previous_versions)
-        self.search_engine.index_prev_versions(project_id=project_id,\
-            version_id=version_id, previous_versions=previous_versions)
+        if (len(previous_versions)>0):
+            self.search_engine.index_prev_versions(project_id=project_id,\
+                version_id=version_id, previous_versions=previous_versions)
         
         print("previous questions added")
         self.search_engine.index(project_id=project_id, version_id=version_id,\
